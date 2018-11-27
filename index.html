@@ -3,8 +3,44 @@
   <head>
     <meta charset="utf-8">
     <title>Calin Mocanu</title>
+
+    <style>
+      body {
+        background-color: white;
+        max-width: 45em;
+        text-align: justify;
+        display: flex;
+        flex-direction: column;
+      }
+    </style>
   </head>
   <body>
-    <p>Hello Github Pages!</p>
+
+    <section>
+      <h3>Cell Membrane Simulation</h3>
+      <p>I <a href="https://beta.observablehq.com/@csiz/cell-settling">simulated the behaviour of cell membranes</a> for a research collaboration with my wife, Catalina Spatarelu, and her colleague Dung Nguyen. It's written in <a href="https://beta.observablehq.com/">Observable</a> using a literate programming style; that is prose, code and visualisation intermixed. Visualisations are all done using <a href="https://d3js.org/">d3</a> and the physics interactions are optimised using a <a href="https://en.wikipedia.org/wiki/Quadtree">quadtree</a>. The goal of the project is to analyse the jamming/unjamming transition and a poster has been accepted for presentation at <a href="https://www.bmes.org/cmbeconf2019">CMBE 2019</a>.</p>
+
+      <video autoplay muted loop width="360"
+        style="margin: "
+      >
+        <source src="data/simulation-fast.mp4" type="video/mp4"/>
+        Video of the cell simulation.
+      </video>
+    </section>
+
+    <section>
+      <h3>It's a Stick-up</h3>
+      <p><a href="https://github.com/csiz/itsastickup">My first project</a> on my quest to build a walking robot using neural nets. It's my physical build of the classic <a href="https://gym.openai.com/envs/Pendulum-v0/">pendulum</a> control problem. The goal is to swing a stick and keep it balanced so it stays upright. Turns out, <a href="https://www.alexirpan.com/2018/02/14/rl-hard.html">reinforcement learning is pretty hard</a>, so I can't show a working version yet. The build I have so far is a Raspberry Pi connected to 4 servos through control board <a href="https://github.com/csiz/pi_scripts/blob/master/servo.py">I programmed</a>. There's a string tied to the servos on which a stick is held and on the stick there's a <a href="https://github.com/csiz/pi_scripts/blob/master/gyro.py">gyroscope</a>. The Raspberry Pi connects through websockets to my computer and I sample the measurements and output the servo positions. Hopefully an actor-critic algorithm will control it soon, but for now, here's me fiddling with it.</p>
+      <video autoplay muted loop width="360">
+        <source src="data/itsastickup.mp4" type="video/mp4"/>
+        Video of my pendulum setup.
+      </video>
+    </section>
+
+    <section>
+      <h3>Faces GAN</h3>
+      <p>For the final project of <a href="https://www.udacity.com/course/deep-learning-nanodegree--nd101">Udacity's Deep Learning course</a> I built a faces generator using a <a href="https://en.wikipedia.org/wiki/Generative_adversarial_network">generative adversarial network</a>. The gist of this approach is to build two competing neural networks, one to generate fake images and one to detect whether an image is fake or real. By training both networks in parallel we eventually end up with a generator network that produces images that look just like our dataset; and we discard the detector network. For this project we used the <a href="http://mmlab.ie.cuhk.edu.hk/projects/CelebA.html">CelebA</a> dataset of celebrity pictures so the network learned to generate <strike>celebrity</strike> creepy faces.</p>
+      <img src="https://github.com/csiz/deep/blob/master/Project5/faces.gif?raw=true"/ width="360">
+    </section>
   </body>
 </html>
