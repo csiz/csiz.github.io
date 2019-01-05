@@ -12,6 +12,8 @@ I [simulated the behaviour of cell membranes][simulation] for a research collabo
 
 <!--more-->
 
+Check out the live [simulation] and play with the controls!
+
 
 [simulation]: https://beta.observablehq.com/@csiz/cell-settling
 [observable]: https://beta.observablehq.com/
