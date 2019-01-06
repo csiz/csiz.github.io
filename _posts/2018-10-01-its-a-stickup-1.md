@@ -14,9 +14,17 @@ title:  "It's a Stick-up (part 1)"
 
 PS. Feel free to use my code for the async interface for the [servo] and [gyro], but beware that [setting up the Raspberry PI][setup] is a bit tricky.
 
+Bonus [pulse width modulation through a shift register][shifty].
+
+<video autoplay muted loop width="360">
+  <source src="/assets/images/shift-register-pwm.mp4" type="video/mp4"/>
+  Video of rolling LED effect controlled by shift register.
+</video>
+
 [stickup]: https://github.com/csiz/itsastickup
 [pendulum]: https://gym.openai.com/envs/Pendulum-v0/
 [hard rl]: https://www.alexirpan.com/2018/02/14/rl-hard.html
 [servo]: https://github.com/csiz/pi_scripts/blob/master/servo.py
 [gyro]: https://github.com/csiz/pi_scripts/blob/master/gyro.py
 [setup]: https://github.com/csiz/pi_scripts/blob/master/pi_setup.txt
+[shifty]: https://github.com/csiz/pi_scripts/blob/master/shifty.py
