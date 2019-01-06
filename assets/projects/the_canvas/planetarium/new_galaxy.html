@@ -1,0 +1,17 @@
+Position:(<input type="text" id="p_x" size="2" value="0"/>,<input type="text" id="p_y" size="2" value="0"/>)<br/>
+Speed:(<input type="text" id="p_v_x" size="2" value="0"/>,<input type="text" id="p_v_y" size="2" value="0"/>)<br/>
+Size:<input type="text" id="p_size" size="2" value="100"/><br/>
+Radius:<input type="text" id="p_radius" size="2" value="100"/><br/>
+Rotation:<input type="checkbox" id="p_trig" checked>trigonometric</input><br/>
+Name:<input type="text" id="p_name" size="4" /><br/>
+
+<button onclick="window.opener.add_galaxy(
+	parseFloat(document.getElementById('p_x').value),
+	parseFloat(document.getElementById('p_y').value),
+	parseFloat(document.getElementById('p_v_x').value),
+	parseFloat(document.getElementById('p_v_y').value),
+	document.getElementById('p_trig').checked,
+	parseFloat(document.getElementById('p_size').value),
+	parseFloat(document.getElementById('p_radius').value),
+	document.getElementById('p_name').value
+);window.close();">Add system</button>

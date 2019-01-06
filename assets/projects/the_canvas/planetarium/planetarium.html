@@ -1,0 +1,529 @@
+<html> 
+  <head> 
+    <title>Planetarium</title> 
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"> 
+	
+  </head> 
+  <body> 
+
+	<style type="text/css"> 
+		body{
+			margin: 0;
+			padding: 0;
+			margin-left:auto;
+			margin-right:auto;
+			background: black;
+			color: black;
+			text-align: left;
+			font-family: Arial, Helvetica, sans-serif;
+			font-size: 0.8em;
+		}
+    </style> 
+	<script type="text/javascript" src="canvas.js"></script>
+	<script type="text/javascript" src="point_mass.js"></script>
+	
+	<canvas id="canapea" style="position:absolute;z-index:0">To experience the full site please use one of the following browsers: <a href='http://www.google.com/chrome'>Google Chrome</a>, <a href='http://www.mozilla.com/firefox/'>Mozzila Firefox</a>, <a href='http://www.apple.com/safari/'>Apple Safari</a> or <a href='http://www.opera.com/'>Opera</a>.</canvas> 
+	<button id="ui_visibility" style="position:absolute;z-index:1;right:10;top:5;" onclick="show_ui()">Options</button>
+	<div id="ui" style="position:absolute;z-index:1;background-color:grey;color:black;width:170;height:330;right:10;top:35;visibility:hidden;">
+			<button id="state_button" onclick="stop_phys();">Stop</button><br/>
+			<button onclick="desen.canvas.reset_view();watched=null;">Reset View</button>
+			<button onclick="desen.canvas.reset_view();stuff.length=0;">Clear</button><br/>
+			Predefined systems:
+			<select  onchange="adauga_stare(this)">
+				<option> Void
+				<option> Solar system (1)
+				<option> Solar system (2)
+				<option> Sun & Earth
+				<option> Gas Cloud
+				<option> Close galaxies
+				<option> Galaxy
+			</select><br/>
+			<button id="new_particle_button" onclick="start_new_particle();">New particle</button><br/>
+			
+			Position:(<input type="text" id="p_x" size="2" disabled="disabled"/>,<input type="text" id="p_y" size="2" disabled="disabled"/>)<br/>
+			Speed:(<input type="text" id="p_v_x" size="2" disabled="disabled"/>,<input type="text" id="p_v_y" size="2" disabled="disabled"/>)<br/>
+			Mass:<input type="text" id="p_mass" size="2" disabled="disabled"/><br/>
+			Name:<input type="text" id="p_name" size="4" disabled="disabled"/><br/>
+			<button id="new_galaxy_button" onclick="new_galaxy();">New stable system</button><br/>
+			<button id="delete_button" onclick="delete_particle();" disabled="disabled">Erase particles</button><br/>
+			
+			<button onclick="save_planets();">Save</button><button onclick="load_planets();">Load</button><br/>
+			State:<input type="text" id="state" size="5"/><button onclick="document.getElementById('state').value='';">Del</button><br/>
+			
+			<script type="text/javascript">
+				document.onselectstart = function() {return false;}
+				function show_ui(){
+					document.getElementById("ui").style.visibility="visible";
+					document.getElementById("ui_visibility").onclick=function(){hide_ui();};
+				}
+				function hide_ui(){
+					document.getElementById("ui").style.visibility="hidden";
+					document.getElementById("ui_visibility").onclick=function(){show_ui();};
+				}
+				var state_data=null;
+				function load_planets(){
+					eval(document.getElementById("state").value);
+					for(x in state_data){
+						var planet = new Planet();
+						planet.name = state_data[x].n;
+						planet.mass = state_data[x].m;
+						planet.pos.x = state_data[x].p.x + desen.canvas.width / 2;
+						planet.pos.y = state_data[x].p.y + desen.canvas.height / 2;
+						planet.speed.x = state_data[x].s.x;
+						planet.speed.y = state_data[x].s.y;
+						stuff.push(planet);
+					}
+				}
+				function save_planets(){
+					var s = "state_data=[";
+					for(x in stuff){
+						s+="{n:'"+stuff[x].name+"',p:{x:"+(stuff[x].pos.x-desen.canvas.width/2)+",y:"+(stuff[x].pos.y-desen.canvas.height/2)+"},s:{x:"+stuff[x].speed.x+",y:"+stuff[x].speed.y+"},m:"+stuff[x].mass+"},";
+					}
+					s+="];";
+					document.getElementById("state").value=s;
+					document.getElementById("state").focus();
+					document.getElementById("state").select();
+				}
+			
+			
+			
+				var lista_stari_predefinite = [
+					"",
+					"random_exploded_star1();",
+					"random_exploded_star2();",
+					"sun_and_earth();",
+					"static_cloud();",
+					"galaxy(0,100,0.5,0,1,100,100,'G1');galaxy(0,-80,-0.5,0,1,100,100,'G2');",
+					"galaxy(0,0,0,0,1,250,200,'Galaxy');",
+				]
+				function adauga_stare(event){
+					desen.canvas.reset_view();stuff.length=0;
+					
+					eval(lista_stari_predefinite[event.selectedIndex]);
+				}
+				function stop_phys(){
+					document.getElementById("delete_button").disabled=false;
+					clearInterval(fizica);
+					document.getElementById("state_button").onclick=function(){start_phys();};
+					document.getElementById("state_button").innerHTML="Start";
+					new_particle = function(){
+						var pos = new Point(document.getElementById("p_x").value,document.getElementById("p_y").value);
+						var g_pos = desen.canvas.get_global_coords(pos.x,pos.y);
+					
+						panza.save();
+						panza.setTransform(1,0,0,1,0,0);
+						panza.fillStyle = "white";
+						panza.strokeStyle = "white";
+						panza.beginPath();
+						panza.arc(g_pos.x,g_pos.y,
+							Math.log(document.getElementById("p_mass").value + 3) * density / PointMass.scale * desen.scale,
+							0,2 * Math.PI,false
+						);
+						panza.closePath();
+						panza.fill();
+						panza.beginPath();
+						panza.moveTo(g_pos.x,g_pos.y);
+						panza.lineTo(
+							g_pos.x + document.getElementById("p_v_x").value * desen.scale * 100,
+							g_pos.y + document.getElementById("p_v_y").value * desen.scale * 100
+						);
+						panza.closePath();
+						panza.stroke();
+						panza.restore();
+					}
+				}
+				function start_phys(){
+					new_particle = function(){}
+					fizica = setInterval(physics,30/speed);
+					document.getElementById("state_button").onclick=function(){stop_phys();};
+					document.getElementById("state_button").innerHTML="Stop";
+					stop_deleting_particles();
+					document.getElementById("delete_button").disabled=true;
+				}
+				function delete_particle(){
+					watched = null;
+					desen.onmousedown = function(event){
+						for (i=0;i<stuff.length;i++){
+							if( Math.log(stuff[i].mass + 3) * density / PointMass.scale > Point.distance(stuff[i].pos,desen.canvas.get_local_coords(desen.mouse.x,desen.mouse.y)) ){
+								stuff.splice(i,1);
+								break;
+							}
+						}
+					}
+					document.getElementById("delete_button").onclick=function(){stop_deleting_particles();};
+					document.getElementById("delete_button").innerHTML="Stop this";
+				}
+				function stop_deleting_particles(){
+					document.getElementById("delete_button").onclick=function(){delete_particle();};
+					document.getElementById("delete_button").innerHTML="Erase particles";
+					desen.onmousedown = function(event){
+						var bolean = false;
+						for (i=0;i<stuff.length;i++){
+							if( Math.log(stuff[i].mass + 3) * density / PointMass.scale > Point.distance(stuff[i].pos,desen.canvas.get_local_coords(desen.mouse.x,desen.mouse.y)) ){
+								watched = stuff[i];
+								bolean = true;
+								break;
+							}
+						}
+						if(!bolean){
+							watched = null;
+						}
+					}
+				}
+				
+				
+				function add_new_particle(){
+					document.getElementById("delete_button").disabled=false;
+					document.getElementById("p_x").disabled=true;
+					document.getElementById("p_y").disabled=true;
+					document.getElementById("p_v_x").disabled=true;
+					document.getElementById("p_v_y").disabled=true;
+					document.getElementById("p_mass").disabled=true;
+					document.getElementById("p_name").disabled=true;
+					
+					desen.onmousedown = function(event){}
+					document.getElementById("state_button").disabled=false;
+					desen.auto_ui=true;
+					document.getElementById("new_particle_button").onclick=function(){start_new_particle();};
+					document.getElementById("new_particle_button").innerHTML="New particle";
+					
+					new_particle = function(){}
+					
+					var planet = new Planet();
+					planet.name = document.getElementById("p_name").value;
+					planet.mass = parseFloat(document.getElementById("p_mass").value);
+					planet.pos.x = parseFloat(document.getElementById("p_x").value);
+					planet.pos.y = parseFloat(document.getElementById("p_y").value);
+					planet.speed.x = parseFloat(document.getElementById("p_v_x").value);
+					planet.speed.y = parseFloat(document.getElementById("p_v_y").value);
+					stuff.push(planet);
+					
+					document.getElementById("p_x").value="";
+					document.getElementById("p_y").value="";
+					document.getElementById("p_v_x").value="";
+					document.getElementById("p_v_y").value="";
+					document.getElementById("p_mass").value="";
+					document.getElementById("p_name").value="";
+					
+					desen.onmousedown = function(event){
+						var bolean = false;
+						for (i=0;i<stuff.length;i++){
+							if( Math.log(stuff[i].mass + 3) * density / PointMass.scale > Point.distance(stuff[i].pos,desen.canvas.get_local_coords(desen.mouse.x,desen.mouse.y)) ){
+								watched = stuff[i];
+								bolean = true;
+								break;
+							}
+						}
+						if(!bolean){
+							watched = null;
+						}
+					}
+		
+					watching =function(){watch();}
+				}
+				function start_new_particle(){
+					//init
+					stop_phys();
+					document.getElementById("state_button").disabled=true;
+					desen.auto_ui=false;
+					document.getElementById("new_particle_button").onclick=function(){add_new_particle();};
+					document.getElementById("new_particle_button").innerHTML="Add particle";
+					document.getElementById("new_particle_button").disabled=true;
+					watching =function(){}
+					desen.onmousedown = function(event){}
+					document.getElementById("p_x").value="";
+					document.getElementById("p_y").value="";
+					document.getElementById("p_v_x").value="";
+					document.getElementById("p_v_y").value="";
+					document.getElementById("p_mass").value="";
+					document.getElementById("p_name").value="";
+					document.getElementById("delete_button").disabled=true;
+					//select position
+					new_particle = function(){
+						
+					
+						panza.save();
+						panza.setTransform(1,0,0,1,0,0);
+						panza.fillStyle = "white";
+						panza.beginPath();
+						panza.arc(desen.mouse.x,desen.mouse.y,3,0,2 * Math.PI,false);
+						panza.closePath();
+						panza.fill();
+						panza.restore();
+						
+						document.getElementById("p_x").value=desen.canvas.get_local_coords(desen.mouse.x,0).x;
+						document.getElementById("p_y").value=desen.canvas.get_local_coords(0,desen.mouse.y).y;
+					}
+					desen.onmousedown = function(event){
+						//select mass
+						desen.onmousedown = function(event){}
+						new_particle = function(){
+							var pos = new Point(document.getElementById("p_x").value,document.getElementById("p_y").value);
+							var g_pos = desen.canvas.get_global_coords(pos.x,pos.y);
+							var maus = desen.canvas.get_local_coords(desen.mouse.x,desen.mouse.y);
+							var masa = Point.distance(pos,maus);
+						
+							panza.save();
+							panza.setTransform(1,0,0,1,0,0);
+							panza.fillStyle = "white";
+							panza.beginPath();
+							panza.arc(g_pos.x,g_pos.y,
+								Math.log(masa + 3) * density / PointMass.scale * desen.scale,
+								0,2 * Math.PI,false
+							);
+							panza.closePath();
+							panza.fill();
+							panza.restore();
+							
+							document.getElementById("p_mass").value=masa;;
+						}
+						
+						desen.onmouseup = function(event){
+							//select speed
+							desen.onmouseup = function(event){}
+							new_particle = function(){
+								var pos = new Point(document.getElementById("p_x").value,document.getElementById("p_y").value);
+								var g_pos = desen.canvas.get_global_coords(pos.x,pos.y);
+								var maus = desen.canvas.get_local_coords(desen.mouse.x,desen.mouse.y);
+								
+								panza.save();
+								panza.setTransform(1,0,0,1,0,0);
+								panza.fillStyle = "white";
+								panza.strokeStyle = "white";
+								panza.beginPath();
+								panza.arc(g_pos.x,g_pos.y,
+									Math.log(document.getElementById("p_mass").value + 3) * density / PointMass.scale * desen.scale,
+									0,2 * Math.PI,false
+								);
+								panza.closePath();
+								panza.fill();
+								panza.beginPath();
+								panza.moveTo(g_pos.x,g_pos.y);
+								panza.lineTo(desen.mouse.x,desen.mouse.y);
+								panza.closePath();
+								panza.stroke();
+								panza.restore();
+								
+								document.getElementById("p_v_x").value = (maus.x-pos.x)/100;
+								document.getElementById("p_v_y").value = (maus.y-pos.y)/100;
+							
+							}
+							desen.onmousedown = function(event){
+								//final stage
+								document.getElementById("p_x").disabled=false;
+								document.getElementById("p_y").disabled=false;
+								document.getElementById("p_v_x").disabled=false;
+								document.getElementById("p_v_y").disabled=false;
+								document.getElementById("p_mass").disabled=false;
+								document.getElementById("p_name").disabled=false;
+								
+								desen.onmousedown = function(event){
+									add_new_particle();
+									start_phys();
+								}
+								document.getElementById("new_particle_button").disabled=false;
+								new_particle = function(){
+									var pos = new Point(document.getElementById("p_x").value,document.getElementById("p_y").value);
+									var g_pos = desen.canvas.get_global_coords(pos.x,pos.y);
+								
+									panza.save();
+									panza.setTransform(1,0,0,1,0,0);
+									panza.fillStyle = "white";
+									panza.strokeStyle = "white";
+									panza.beginPath();
+									panza.arc(g_pos.x,g_pos.y,
+										Math.log(document.getElementById("p_mass").value + 3) * density / PointMass.scale * desen.scale,
+										0,2 * Math.PI,false
+									);
+									panza.closePath();
+									panza.fill();
+									panza.beginPath();
+									panza.moveTo(g_pos.x,g_pos.y);
+									panza.lineTo(
+										g_pos.x + document.getElementById("p_v_x").value * desen.scale * 100,
+										g_pos.y + document.getElementById("p_v_y").value * desen.scale * 100
+									);
+									panza.closePath();
+									panza.stroke();
+									panza.restore();
+								}
+							}
+							
+						}
+					}
+				}
+				
+				function new_galaxy(){
+					win=window.open('new_galaxy.html','New stable system','width=200,height=300,titlebar=no,menubar=no,');
+					win.focus();
+				}
+
+				function add_galaxy(x,y,vx,vy,trigonometric,size,radii,name){
+					galaxy(x,y,vx,vy,trigonometric,size,radii,name);
+				}
+				
+				
+				
+				
+				
+			</script>
+	</div>
+	
+	
+	
+	
+	<script type="text/javascript"> 
+		//??
+		var watched;
+		var watching;
+		function new_particle(){}
+		var speed = 1;
+	
+		var magnify = 400;
+		var desen = CreateCanvas('canapea');
+		var panza = desen.context;
+		//constants:
+			//var density = 3.51125 * Math.pow(10,-2);//fixed, density of earth...
+		var density = 1;
+			//PointMass.scale = Math.pow(10,0);//1 pixel = scale meters
+				//speed and acc are in m/s and m/s^2 , positions are in pixels
+		PointMass.scale = 1;
+		var time = 1;
+		var friction = 0.99995;
+		//data:
+		var stuff = new Array;
+		function Planet(){
+			this.name = "";
+			this.inheritFrom = PointMass;
+			this.inheritFrom();
+		}
+		
+		//physics:
+		function physics(){
+			//collisions
+			for (i=0;i<stuff.length;i++){
+				for (j=i+1;j<stuff.length;j++){
+					if( Math.pow(stuff[i].mass,1 / 3) * density / PointMass.scale + Math.pow(stuff[j].mass,1 / 3) * density / PointMass.scale > Point.distance(stuff[i].pos,stuff[j].pos) ){
+						planet = PointMass.plastic_collision(stuff[i],stuff[j]);
+						if(stuff[i].mass > stuff[j].mass){
+							planet.name = stuff[i].name;
+						}else{
+							planet.name = stuff[j].name;
+						}
+						//for watch part
+						if(stuff[i]==watched || stuff[j]==watched) watched = planet;
+						//end watch part
+						stuff.push(planet);
+						stuff.splice(j,1);
+						stuff.splice(i,1);
+						i--;
+						break;
+					}
+				}
+			}
+			//forces
+			for (i=0;i<stuff.length;i++){
+				for (j=i+1;j<stuff.length;j++){
+					PointMass.gravity(stuff[i],stuff[j]);
+				}
+			}
+			//run
+			for (i in stuff){
+				stuff[i].time(time);
+			}
+			//friction correction:
+			for (i in stuff){
+				stuff[i].speed.x *= friction;
+				stuff[i].speed.y *= friction;
+			}
+		}
+		//draw:
+		function draw(){
+			watching();
+			panza.save();
+			panza.fillStyle = "black";
+			panza.setTransform(1,0,0,1,0,0);
+			panza.fillRect(0,0,desen.canvas.width,desen.canvas.height);
+			panza.restore();
+			
+			panza.fillStyle = "white";
+
+			for(i in stuff){
+				panza.beginPath();
+				panza.arc(stuff[i].pos.x,stuff[i].pos.y,Math.log(stuff[i].mass + 3) * density / PointMass.scale,0,2 * Math.PI,false);
+				panza.closePath();
+				panza.fill();
+				panza.fillText(stuff[i].name,stuff[i].pos.x + 3 + Math.log(stuff[i].mass + 3) * density / PointMass.scale,stuff[i].pos.y);
+			}
+			new_particle();
+		}
+		//ui interaction:
+		
+		function watch(){
+			if(watched!=null){
+				document.getElementById("p_x").value=watched.pos.x;
+				document.getElementById("p_y").value=watched.pos.y;
+				document.getElementById("p_v_x").value=watched.speed.x;
+				document.getElementById("p_v_y").value=watched.speed.y;
+				document.getElementById("p_mass").value=watched.mass;
+				document.getElementById("p_name").value=watched.name;
+
+				var center = desen.canvas.get_local_coords(desen.canvas.width/2,desen.canvas.height/2);
+				
+				desen.translate(
+					center.x-watched.pos.x,
+					center.y-watched.pos.y
+				);
+			}else{
+				document.getElementById("p_x").value="";
+				document.getElementById("p_y").value="";
+				document.getElementById("p_v_x").value="";
+				document.getElementById("p_v_y").value="";
+				document.getElementById("p_mass").value="";
+				document.getElementById("p_name").value="";
+			}
+
+		}
+			
+		
+		
+		//window stuff:
+		function resize_desen(){
+			desen.canvas.width=desen.canvas.parentNode.clientWidth;
+			desen.canvas.height=desen.canvas.parentNode.clientHeight;
+			desen.canvas.reset_view();
+		}
+		resize_desen();
+		window.onresize=resize_desen;
+		
+		</script>
+		<script type="text/javascript" src="init_conditions.js"></script>
+		<script type="text/javascript">
+		
+		
+		//init:
+		desen.onmousedown = function(event){
+			var bolean = false;
+			for (i=0;i<stuff.length;i++){
+				if( Math.log(stuff[i].mass + 3) * density / PointMass.scale > Point.distance(stuff[i].pos,desen.canvas.get_local_coords(desen.mouse.x,desen.mouse.y)) ){
+					watched = stuff[i];
+					bolean = true;
+					break;
+				}
+			}
+			if(!bolean){
+				watched = null;
+			}
+		}
+		
+		watching = function(){watch();}
+		var fizica = setInterval(physics,30/speed);
+		setInterval(draw,40);
+		sun_and_earth();
+		
+		
+		//corrections/tests/experiments
+		
+	</script> 
+  </body> 
+</html> 
