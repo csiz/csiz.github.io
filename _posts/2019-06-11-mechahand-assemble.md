@@ -5,8 +5,8 @@ layout: post
 
 Got my first 3D printer a month ago so naturally my first project after printing Benchy is to make a 20 degree of
 freedom mecha-hand. Because simple beginner stuff, right?! Turns out the engineer was inside me all along, and I now
-have a functioning, near human movement mechanical arm. Well, I have the physical components assembled, but none of
-the smarts to make usable yet. I'm working on those now!
+have a functioning, near full human movement, mechanical arm. Well, I have the physical components assembled, but
+not the electronics to make usable yet. I'm working on those now!
 
 <span style="display: flex;">
   <span><img src="/assets/images/mechahand-design.png" width="360" alt="Palm design including wrist."/></span><!--
@@ -32,8 +32,8 @@ First lesson was to print parts sequentially, as the printer head leaves a lot o
 components. The second lesson was on how bridging works, or rather doesn't work when you want very precise dimensions.
 Because we print layers of plastic on top of each-other we always need something on the layer below for the plastic to
 stick to. We can go up to 60° away from vertical before the plastic starts to droop down too much. And finally I learned
-that tiny bits of plastic don't stick enough to the printer bed and the Kraken hits you with a stringy mess. This last
-part is really annoying when you're trying to make small mechanisms... But at least the parts print fast.
+that tiny bits of plastic don't stick enough to the printer bed and the Kraken hits you with a stringy mess. The last
+issue is really annoying when you're trying to make small mechanisms... But at least the parts print fast.
 
 With that said, onwards through my design history. Every paragraph below is roughly a whole prototyping day:
 
@@ -67,7 +67,7 @@ another more challenging issue is that I lack any means to tension up the nylon 
 
 Every finger iteration got smaller and smaller until I reached the size of the cheap potentiometers I bought. Turns out it's really hard to search
 for potentiometers with a hole in them. Especially if you want them to be extra cheap. After I built the hand I found some that are tinier, maybe
-I'll redesign after the electronics.
+I'll redesign it after the electronics.
 
 
 <img src="/assets/images/mechahand-thumbs.png" width="480" alt="Palm design with opposable thumbs."/>
@@ -96,6 +96,7 @@ I'll redesign after the electronics.
 The fingertips are made of a zig-zag plastic piece that's meant to easily squeeze under pressure. With a stress gauge glued on
 the part that bends the most, and a second gauge on a flat side to complete one side of an H-bridge. On top of them I glued a
 thin rubber sheet to protect the gauges and give the fingers some grip.
+
 <img src="/assets/images/mechahand-fingertip.jpg" width="480" alt="Finger tip."/>
 
 Iterating
@@ -117,8 +118,8 @@ First assembly including wires! Absolute unit of a hand.
 
 
 And it's garbage! The 1mm thin PTFE tubes are too thin to support any weight, have to redesign back to thicker tubes. Will also redesign to
-be a tad smaller. Time to chop some fingers. Having springs all over the place was a bad idea, will change to some tensioning screws near
-the motors and rely on the nylon elasticity. We have to pull the nylon wires pretty tight to overcome the compression in the PTFE tubes.
+be a tad smaller. Time to chop some fingers. Having springs all over the place was a bad also idea, I will change to some tensioning screws
+near the motors and rely on the nylon elasticity. We have to pull the nylon wires pretty tight to overcome the compression in the PTFE tubes.
 
 Got new tubes and redesigned/re-printed holes to fit them. Also made the hand smaller. But holy fucking Christ, tying up the nylon wires
 and keeping tension on them is a major pain in the arse. Also even with thicker tubes, turns out long ones still don't work so well, and
@@ -142,9 +143,9 @@ place the wire tube on the knob and pull it as high on the stairs as I can. It's
 
 First assembly with motors, and it works!
 
-<video autoplay muted loop width="480"><source src="/assets/images/mechahand-thumbsup.mp4" type="video/mp4"/>Video of hand making a thumbs-up.</video>
+<video width="480"><source src="/assets/images/mechahand-thumbsup.mp4" type="video/mp4"/>Video of hand making a thumbs-up.</video>
 
-Up next, I need to wire everything to an ESP32 and an Arduino to measure all the joints and control the motors. Yes I need both chips
+Up next, I need to wire everything to an ESP32 and an Arduino to measure all the joints and control the motors. Yes, I need both chips
 to have enough GPIO pins to do everything. Even then I need a few extra IC like the PCA9685 led driver to control 16 motor speeds
 using just 2 I2C wires, and L293D H-bridges to control the direction of each motor, with possibly a few shift registers if I still
 run out of GPIO pins. By the way, the ESP32 chip looks amazing with 18 ADC inputs and WiFi and Bluetooth.
