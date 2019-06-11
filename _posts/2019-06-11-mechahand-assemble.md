@@ -143,7 +143,7 @@ place the wire tube on the knob and pull it as high on the stairs as I can. It's
 
 First assembly with motors, and it works!
 
-<video width="480"><source src="/assets/images/mechahand-thumbsup.mp4" type="video/mp4"/>Video of hand making a thumbs-up.</video>
+<video controls width="480"><source src="/assets/images/mechahand-thumbsup.mp4" type="video/mp4"/>Video of hand making a thumbs-up.</video>
 
 Up next, I need to wire everything to an ESP32 and an Arduino to measure all the joints and control the motors. Yes, I need both chips
 to have enough GPIO pins to do everything. Even then I need a few extra IC like the PCA9685 led driver to control 16 motor speeds
