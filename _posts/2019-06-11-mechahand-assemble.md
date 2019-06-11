@@ -93,6 +93,9 @@ I'll redesign after the electronics.
   * Made a tiny plastic hook, to tie the nylon to the springs.
   * Made a tube fork to split the 2 nylon wires from a single tube to a pair of tubes, when they need to go in different places.
 
+The fingertips are made of a zig-zag plastic piece that's meant to easily squeeze under pressure. With a stress gauge glued on
+the part that bends the most, and a second gauge on a flat side to complete one side of an H-bridge. On top of them I glued a
+thin rubber sheet to protect the gauges and give the fingers some grip.
 <img src="/assets/images/mechahand-fingertip.jpg" width="480" alt="Finger tip."/>
 
 Iterating
