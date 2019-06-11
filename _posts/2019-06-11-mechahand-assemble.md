@@ -10,7 +10,7 @@ the smarts to make usable yet. I'm working on those now!
 
 <span style="display: flex;">
   <span><img src="/assets/images/mechahand-design.png" width="360" alt="Palm design including wrist."/></span><!--
-  --><video autoplay muted loop width="360"><source src="/assets/images/mechahand-thumbsup.mp4" type="video/mp4"/>Video of hand making a thumbs-up.</video>
+  --><span><video autoplay muted loop width="360"><source src="/assets/images/mechahand-thumbsup.mp4" type="video/mp4"/>Video of hand making a thumbs-up.</video></span>
 </span>
 
 <!--more-->
