@@ -152,6 +152,9 @@ use to drive the breaks and gears.
   <span><img src="/assets/images/mechahand-pulley-closeup.jpg" width="480" alt="Close-up of motor pulley system."/></span>
 </span>
 
+It's Working
+------------
+
 First assembly with motors, and it works!
 
 <video controls width="480"><source src="/assets/images/mechahand-thumbsup.mp4" type="video/mp4"/>Video of hand making a thumbs-up.</video>
