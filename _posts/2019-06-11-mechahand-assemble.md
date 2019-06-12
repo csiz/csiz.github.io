@@ -141,6 +141,17 @@ place the wire tube on the knob and pull it as high on the stairs as I can. It's
 
 <img src="/assets/images/mechahand-motor-system.png" width="480" alt="Motor and pulley design."/>
 
+I did not include the nylon wires and tubes in the 3D model. But as you can see in the close-ups below, the fingers are actuated by a
+pulley system. A nylon wire runs through a spindle around the motor shaft, it's routed through the PTFE tubes to the fingers and then
+tied on the finger sections from both sides. Spinning the motor one way tightens one side and loosens the other, driving the finger in
+that direction. Spinning the motor the other way does the opposite and drives the finger back. This is the same principle that bicycles
+use to drive the breaks and gears.
+
+<span style="display: flex;">
+  <span><img src="/assets/images/mechahand-finger-closeup.jpg" width="480" alt="Close-up of finger pulley system."/></span>
+  <span><img src="/assets/images/mechahand-pulley-closeup.jpg" width="480" alt="Close-up of motor pulley system."/></span>
+</span>
+
 First assembly with motors, and it works!
 
 <video controls width="480"><source src="/assets/images/mechahand-thumbsup.mp4" type="video/mp4"/>Video of hand making a thumbs-up.</video>
