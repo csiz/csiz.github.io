@@ -15,7 +15,17 @@ not the electronics to make usable yet. I'm working on those now!
 
 <!--more-->
 
-Just assembled the hand with motors for the first time:
+I'm trying to create a low cost version of a mechanical robot hand with near human range of motion. The structure
+is 3D printed and I'm using DC motors and cheap potentiometers to actuate it and get feedback. The fingers are driven
+by a pulley system mounted on the arm, much like the tendons and muscles of a human hand. There are also a couple
+of extra flexing points in the palm which gives it nearly the full human range of motion. With those included it has
+opposable thumbs and should be able to grasp pretty well. When un-powered it's rigid because of the inherent tension
+in the pulley system, but it feels like a strong handshake when grasping. I built custom pressure sensors for the
+fingertips so it can sense when touching objects. I'll also be implementing active compliance so it can react and
+mold around objects. There's some potential it can be used as a prosthetic hand, but I'm more focused on robotics
+with deep reinforcement learning.
+
+Here's how it looks like after I the first time I assembled it with motors:
 
 <span style="display: flex;">
   <span><img src="/assets/images/mechahand-top.jpg" width="480" alt="Top of palm."/></span>
