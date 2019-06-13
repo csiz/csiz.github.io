@@ -25,7 +25,7 @@ fingertips so it can sense when touching objects. I'll also be implementing acti
 mold around objects. There's some potential it can be used as a prosthetic hand, but I'm more focused on robotics
 with deep reinforcement learning.
 
-Here's how it looks like after I the first time I assembled it with motors:
+Here's how it looks like assembled with motors for the first time:
 
 <span style="display: flex;">
   <span><img src="/assets/images/mechahand-top.jpg" width="480" alt="Top of palm."/></span>
